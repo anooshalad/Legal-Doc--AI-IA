@@ -41,6 +41,72 @@ h1 {
   cursor: not-allowed;
 }
 
+/* ── Language Toggle ── */
+.lang-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.lang-toggle-wrap label {
+  font-size: 13px;
+  color: #6b7280;
+  user-select: none;
+}
+
+/* The pill switch */
+.lang-switch {
+  position: relative;
+  display: inline-block;
+  width: 72px;
+  height: 30px;
+}
+
+.lang-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.lang-slider {
+  position: absolute;
+  inset: 0;
+  background: #0f766e;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.03em;
+}
+
+.lang-slider::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.25s;
+}
+
+.lang-switch input:checked + .lang-slider::after {
+  transform: translateX(42px);
+}
+
+.lang-slider .lbl-en  { margin-left: 1px; }
+.lang-slider .lbl-hi  { margin-right: 1px; }
+
+
 #output {
   margin-top: 12px;
   padding: 14px;

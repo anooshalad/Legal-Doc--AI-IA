@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Regal</title>
-    <link rel="stylesheet" href="ok.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Regal</title>
+  <link rel="stylesheet" href="ok.css">
+  <!-- PDF.js for client-side text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 </head>
 <body>
 
@@ -12,6 +14,20 @@
 
 <input type="file" id="fileInput" accept=".txt,.pdf,application/pdf">
 <button id="analyzeBtn" onclick="analyze()" disabled>Analyze</button>
+
+<!-- Language toggle pill -->
+<span class="lang-toggle-wrap">
+  <label for="langToggle">EN</label>
+  <label class="lang-switch">
+    <input type="checkbox" id="langToggle">
+    <span class="lang-slider">
+      <span class="lbl-en">EN</span>
+      <span class="lbl-hi">हि</span>
+    </span>
+  </label>
+  <label for="langToggle">हिंदी</label>
+</span>
+
 
 <div id="output"></div>
 

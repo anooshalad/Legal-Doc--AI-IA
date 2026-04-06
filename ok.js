@@ -1,6 +1,6 @@
 
 
-const api = "AIzaSyC3ggBX-Z9DF7BfNf4Zaw4pfiavulJNT88";
+const api = "";
 
 const fileInputEl = document.getElementById("fileInput");
 const outputEl = document.getElementById("output");
@@ -99,6 +99,19 @@ async function analyze() {
 
     outputEl.innerText = "Analyzing...";
 
+    const finalPromptText = `You are an expert legal assistant. Determine the type of the uploaded document.
+
+First, check if the document is a valid legal document. If it is NOT a legal document at all, respond EXACTLY with the phrase 'INVALID_DOCUMENT' and provide nothing else.
+
+If it IS a legal document, output the analysis structured based on its detected type:
+- If MOU: Provide 1) Purpose of the MOU 2) Roles and responsibilities of each party 3) Key terms and conditions 4) Potential loopholes or risks.
+- If Marriage: Provide 1) Details of the parties involved 2) Key clauses (like property rights, alimony if applicable) 3) Legal validity conditions mentioned 4) Any unusual or risky clauses.
+- If Business Contract: Provide 1) Core obligations and deliverables 2) Payment terms 3) Termination clauses and penalties 4) Key risk factors and liabilities.
+- If NDA: Provide 1) Definition of confidential information 2) Exclusions from confidentiality 3) Term and duration 4) Penalties for breach.
+- For any other Legal Document: Provide 1) A plain-language summary 2) Key obligations and deadlines 3) Potential risk points.
+
+Format your response clearly. Start by explicitly stating the detected document type.` + (hasPdf ? "" : `\n\nDocument:\n${text}`);
+
     try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${api}`,
@@ -113,7 +126,7 @@ async function analyze() {
               parts: hasPdf
                 ? [
                     {
-                      text: "Analyze the uploaded legal PDF and provide: 1) A plain-language summary 2) Key obligations and deadlines 3) Potential risk points"
+                      text: finalPromptText
                     },
                     {
                       inline_data: {
@@ -124,13 +137,7 @@ async function analyze() {
                   ]
                 : [
                     {
-                      text: `Analyze this legal document and provide:
-                    1) A plain-language summary
-                    2) Key obligations and deadlines
-                    3) Potential risk points
-
-Document:
-${text}`
+                      text: finalPromptText
                     }
                   ]
             }
@@ -145,8 +152,12 @@ ${text}`
       throw new Error(apiMessage);
     }
 
-    const result = data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "No response";
+    const result = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
+
+    if (result.trim() === "INVALID_DOCUMENT" || result.includes("INVALID_DOCUMENT")) {
+      outputEl.innerHTML = '<div style="color: #dc2626; padding: 10px; background: #fef2f2; border: 1px solid #f87171; border-radius: 8px;"><b>Error:</b> The uploaded file does not appear to be a valid legal document. Please upload a legal document.</div>';
+      return;
+    }
 
     outputEl.innerHTML = formatText(result);
 } catch (error) {
